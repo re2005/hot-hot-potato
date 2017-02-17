@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Hot Hot Potato</title>
+<style>
+/*
+ ______     ______     ______    
+/\  == \   /\  == \   /\  == \   
+\ \  __<   \ \  __<   \ \  __<   
+ \ \_\ \_\  \ \_\ \_\  \ \_\ \_\ 
+  \/_/ /_/   \/_/ /_/   \/_/ /_/ 
+                                 
+CSS Style - Hacker Battle
+                                                              
+*/
+
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td,article,aside,canvas,details,embed,figure,figcaption,footer,header,hgroup,menu,nav,output,ruby,section,summary,time,mark,audio,video{border:0;font-size:100%;font:inherit;vertical-align:baseline;margin:0;padding:0}article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section{display:block}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:none}table{border-collapse:collapse;border-spacing:0}
+
+/* bases */
+html {
+    height: 100%;
+    background-color: gray;
+}
+body {
+    width: 100%;
+}
+body *{
+    font-family: 'Helvetica', Arial, sans-serif;
+}
+header {
+    width: 80%;
+    display: table;
+    margin: auto;
+}
+h1 {
+    float: left;
+    display: block;
+    width: 100%;
+    font-size: 3em;
+}
+nav {
+    float: left;
+    padding: 5% 10%;
+    color: #fff;
+    text-align: center;
+    width: 80%;
+}
+nav img {
+    margin: auto;
+    display: table;
+}
+
+.button {
+background: #a84141;
+border-top: 1px solid #8c3838;
+border-right: 1px solid #4d1f1f;
+border-bottom: 1px solid #331515;
+border-left: 1px solid #4d1f1f;
+border-radius: 4px;
+-webkit-box-shadow: inset 0 1px 10px #ee5b5b, 0px 1px 0 #4d1d1d, 0 6px 0px #531f1f, 0 8px 4px 1px #111111;
+box-shadow: inset 0 1px 10px #ee5b5b, 0px 1px 0 #4d1d1d, 0 6px 0px #531f1f, 0 8px 4px 1px #111111;
+color: #fff;
+font: bold 20px/1 "helvetica neue", helvetica, arial, sans-serif;
+margin: 10px 0 10px 0;
+padding: 20px 0;
+text-align: center;
+text-shadow: 0 -1px 1px #4c1e1e;
+width: 100%;
+height: 20px;
+-webkit-background-clip: padding-box;
+text-decoration: none;
+display: inline-block;
+text-transform: uppercase;
+}
+
+.button:hover {
+  -webkit-box-shadow: inset 0 0 20px #ff8686, 0px 1px 0 #4d1d1d, 0 6px 0px #531f1f, 0 8px 4px 1px #111111;
+  box-shadow: inset 0 0 20px #ff8686, 0px 1px 0 #4d1d1d, 0 6px 0px #531f1f, 0 8px 4px 1px #111111;
+  cursor: pointer; }
+.button:active {
+  -webkit-box-shadow: inset 0 1px 10px #ee5b5b, 0 1px 0 #4d1d1d, 0 2px 0 #1f3053, 0 4px 3px 0 #111111;
+  box-shadow: inset 0 1px 10px #ee5b5b, 0 1px 0 #4d1d1d, 0 2px 0 #531f1f, 0 4px 3px 0 #111111;
+  margin: 16px 0 10px 0;}
+.button.no {
+    border-radius: 200px;
+    width: 200px;
+    height: 90px;
+    padding-top: 90px;
+    display:none;
+}
+
+#gameOver,
+#showTrack {
+    display: none;
+}
+
+@media (max-width: 767px) {
+
+}
+</style>
+</head>
+<body>
+
+
+<header>
+<nav>
+<h1>Hot Hot Potato</h1>
+<img src="potato.png" alt="Hot Hot Potato" width="185" height="227" />
+<a href="javascript:;" id="wantPlay" class="button">Start NOW!</a>
+<a href="javascript:;" id="notMe" class="button no">NO!!!</a>
+
+<div style="display:none;">
+    <audio src="http://cdn-preview-b.deezer.com/stream/b18965a0efe1a8f312ff415c39397a51-1.mp3" id="audio" style="display:none;">
+</div>
+
+<h1 id="gameOver" class="well">GAME OVER!!!</h1>
+<div id="showTrack" class="well"></div>
+
+</nav>
+</header>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="http://code.jquery.com/jquery-2.0.0.js"></script>
+<script>
+    var socket;
+
+    $(document).ready(function() {
+
+        var bind = function () {
+            socket = io.connect('http://public.renangoncalves.com', 8080);
+            socket.on('connect', function (data) {
+                $('html').css('background-color', 'gray');
+            });
+            socket.on('start', function (data) {
+                var audio = $('#audio')[0];
+                audio.currentTime = 0;
+                audio.play();
+
+                $('#notMe').css('display', 'inline-block');
+                $('#showTrack, #gameOver').hide();
+            });
+            socket.on('stop', function (data) {
+                var audio = $('#audio')[0];
+                audio.pause();
+
+                $('#notMe').hide();
+                $('#showTrack').show();
+            });
+            socket.on('change-color', function (data) {
+                $('html').css('background-color', data.color);
+                
+                if (data.color === 'black') {
+                    $('#gameOver').show();
+                }
+            });
+
+            $('html, body, #notMe').bind('click', function() {
+                socket.emit('not-me', { not: 'me' });
+            });
+        };
+
+        $('#wantPlay').bind('click', function() {
+            audio.play();
+            audio.pause();
+
+            bind();
+
+            // Hide from screen
+            $('#wantPlay').hide();
+        });
+
+        var audio = $('#audio')[0];
+        audio.controls = 'controls';
+        audio.load();
+
+        // Call API
+        $.ajax('http://api.deezer.com/2.0/album/302127?output=jsonp', {
+            dataType: 'jsonp',
+            success: function(data) {
+                var tracks = data.tracks.data;
+                var track = tracks[11]; // Short Circuit
+                
+                audio.src = track.preview;
+                audio.load();
+
+                var a = $('<a target="_blank" href="#"><img src="" /> <h3>name</h3><span>date</span></a>');
+                a.attr('href', data.link);
+                a.find('img').attr('src', data.cover);
+                a.find('h3').html(data.title);
+                a.find('span').html(data.artist.name + ' | ' + data.release_date);
+
+                $('#showTrack').html(a);
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

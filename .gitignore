@@ -1,0 +1,11 @@
+.DS_Store
+node_modules/
+bower_components/
+coverage/
+.sass-cache/
+.idea/
+*.ipr
+*.iml
+.tmp/
+dist/
+/npm-debug.log
