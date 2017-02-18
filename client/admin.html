@@ -7,23 +7,15 @@
 </head>
 <body>
 
+<button id="connect">connect</button>
+<hr>
 <button id="start">start</button>
-
+<hr>
+<h1 id="players"></h1>
 
 <script src="/socket.io/socket.io.js"></script>
 <script src="http://code.jquery.com/jquery-2.0.0.js"></script>
-
-<script>
-    var socket = io.connect('http://localhost:8080?admin');
-
-    socket.on('new-user-connected', function (data) {
-        console.log(data);
-    });
-
-    $('#start').click(function (event) {
-        socket.emit('start');
-    });
-</script>
+<script src="./admin.js"></script>
 
 </body>
 </html>

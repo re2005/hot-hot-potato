@@ -1,4 +1,4 @@
-var app = require('express')(8080);
+var app = require('express')();
 var server = require('http').createServer(app);
 var io = require('socket.io').listen(server);
 
@@ -15,10 +15,13 @@ app.get('/admin', function (req, res) {
     res.sendFile(__dirname + '/admin.html');
 });
 app.get('/client.js', function (req, res) {
-    res.sendFile(__dirname + '//client.js');
+    res.sendFile(__dirname + '/client.js');
+});
+app.get('/admin.js', function (req, res) {
+    res.sendFile(__dirname + '/admin.js');
 });
 
-server.listen(8080);
+server.listen(3000);
 
 var Game = {
     started: false,
@@ -97,8 +100,11 @@ var Game = {
 io.sockets.on('connection', function (socket) {
 
     var isAdmin = socket.handshake.url.indexOf('admin') > 0;
-
     if (!isAdmin) Game.addPlayer(socket.id);
+
+    socket.on('get-connected-users', function () {
+        io.emit('users-connected', Game.playerList.length);
+    });
 
     socket.on('new-user', function () {
         io.emit('new-user-connected', Game.playerList);
@@ -109,7 +115,7 @@ io.sockets.on('connection', function (socket) {
         io.emit('user-desconnected', Game.playerList);
     });
 
-    socket.on('not-me', function (data) {
+    socket.on('not-me', function () {
         console.log('not-me');
         if (socket.id === Game.currentSocketId) {
             socket.emit('change-color', {color: 'gray'});
@@ -117,7 +123,7 @@ io.sockets.on('connection', function (socket) {
         }
     });
 
-    socket.on('start', function (data) {
+    socket.on('start', function () {
         console.log('start');
         if (Game.started) {
             return false;

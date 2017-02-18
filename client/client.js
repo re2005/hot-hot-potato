@@ -6,7 +6,7 @@ $(document).ready(function () {
 
     var bind = function () {
 
-        socket = io.connect('http://192.168.1.14:8080');
+        socket = io.connect('http://localhost:3000/');
 
         socket.on('connect', function (data) {
             $('html').css('background-color', 'gray');
@@ -35,7 +35,6 @@ $(document).ready(function () {
         });
 
         socket.on('change-color', function (data) {
-
             $('html').css('background-color', data.color);
             if (data.color === 'black') {
                 $('#gameOver').show();
@@ -43,6 +42,7 @@ $(document).ready(function () {
         });
 
         $('#notMe').bind('click mouseout', function () {
+            $('html').css('background-color', 'gray');
             socket.emit('not-me', {not: 'me'});
         });
     };
