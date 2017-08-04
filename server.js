@@ -23,7 +23,7 @@ app.get('/admin.js', function (req, res) {
     res.sendFile(__dirname + '/admin.js');
 });
 
-server.listen(80);
+server.listen();
 
 var Game = {
     started: false,
