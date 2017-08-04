@@ -4,7 +4,7 @@ $(document).ready(function () {
 
     var bind = function () {
 
-        socket = io.connect('http://localhost:3000/?admin');
+        socket = io.connect('https://hot-hot-potato.herokuapp.com/?admin');
 
         socket.on('connect', function () {
             $('html').css('background-color', 'gray');

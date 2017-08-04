@@ -6,7 +6,7 @@ $(document).ready(function () {
 
     var bind = function () {
 
-        socket = io.connect('http://192.168.1.14:3000');
+        socket = io.connect('https://hot-hot-potato.herokuapp.com');
 
         socket.on('connect', function (data) {
             $('html').css('background-color', 'gray');
