@@ -1,0 +1,8 @@
+{
+  "name": "Hot Hot Potato",
+  "description": "The popular game hot-potato",
+  "repository": "https://github.com/re2005/hot-hot-potato",
+  "logo": "",
+  "keywords": ["node", "express", "heroku", "hot-potato"],
+  "image": "heroku/nodejs"
+}

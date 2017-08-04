@@ -1,31 +1,36 @@
-#!/usr/bin/env node
+const express = require('express');
+const http = require('http');
+const app = express();
+const server = http.createServer(app);
 
-var app = require('express')();
-var server = require('http').createServer(app);
-var io = require('socket.io').listen(server);
+let io = require('socket.io').listen(server);
 
-app.get('/', function (req, res) {
-    res.sendFile(__dirname + '/index.html');
-});
-app.get('/potato.png', function (req, res) {
-    res.sendFile(__dirname + '/potato.png');
-});
-app.get('/styles.css', function (req, res) {
-    res.sendFile(__dirname + '/styles.css');
-});
-app.get('/admin', function (req, res) {
-    res.sendFile(__dirname + '/admin.html');
-});
-app.get('/client.js', function (req, res) {
-    res.sendFile(__dirname + '/client.js');
-});
-app.get('/admin.js', function (req, res) {
-    res.sendFile(__dirname + '/admin.js');
+app.set('port', (process.env.PORT || 5000));
+app.use(express.static(__dirname + '/public'));
+
+// views is directory for all template files
+app.set('views', __dirname + '/views');
+app.set('view engine', 'ejs');
+
+app.get('/', function (request, response) {
+    response.render('pages/index');
 });
 
-server.listen();
+app.get('/admin', function (request, response) {
+    response.render('pages/admin');
+});
 
-var Game = {
+
+
+server.listen(app.get('port'), function () {
+    console.log('Node app is running on port', app.get('port'));
+});
+
+let os = require("os");
+let hostname = os.hostname();
+console.log(hostname);
+
+let Game = {
     started: false,
     playerList: [],
     lockedPlayerList: [],
@@ -69,7 +74,7 @@ var Game = {
         Game.started = false;
 
         // Mark the loser
-        var socket = io.sockets.sockets[Game.currentSocketId];
+        let socket = io.sockets.sockets[Game.currentSocketId];
         if (socket !== undefined) {
             socket.emit('change-color', {color: 'black'});
         }
@@ -90,7 +95,7 @@ var Game = {
         // Get the next queued player
         Game.currentSocketId = Game.queuedPlayerList.shift();
 
-        var socket = io.sockets.sockets[Game.currentSocketId];
+        let socket = io.sockets.sockets[Game.currentSocketId];
         if (socket === undefined) {
             return Game.changeColor();
         }
@@ -101,7 +106,8 @@ var Game = {
 
 io.sockets.on('connection', function (socket) {
 
-    var isAdmin = socket.handshake.url.indexOf('admin') > 0;
+    let isAdmin = socket.handshake.url.indexOf('admin') > 0;
+    console.log(socket.handshake.url);
     if (!isAdmin) Game.addPlayer(socket.id);
 
     socket.on('get-connected-users', function () {
@@ -135,7 +141,7 @@ io.sockets.on('connection', function (socket) {
 });
 
 Array.prototype.shuffle = function () {
-    var i = this.length, j, tempi, tempj;
+    let i = this.length, j, tempi, tempj;
     if (i === 0) {
         return this;
     }
@@ -154,7 +160,7 @@ Array.prototype.clone = function () {
 };
 
 Array.prototype.removeItem = function (label) {
-    var i = this.length;
+    let i = this.length;
     if (i === 0) {
         return this;
     }

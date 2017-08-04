@@ -1,18 +1,32 @@
 {
   "name": "hot-hot-potato",
-  "version": "0.1.0",
-  "dependencies": {
-    "express": "*",
-    "socket.io": "*"
+  "version": "0.0.1",
+  "description": "A Game called Hot potato",
+  "engines": {
+    "node": "6.11.1"
   },
+  "main": "index.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node index.js",
+    "test": "node test.js"
   },
-  "main": "server.js",
-  "author": "",
-  "license": "ISC",
-  "description": "",
+  "dependencies": {
+    "ejs": "2.5.6",
+    "express": "4.15.2",
+    "socket.io": "^2.0.3"
+  },
   "devDependencies": {
-    "serve-index": "^1.8.0"
-  }
+    "request": "^2.81.0",
+    "tape": "^4.7.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/re2005/hot-hot-potato/"
+  },
+  "keywords": [
+    "node",
+    "heroku",
+    "express"
+  ],
+  "license": "MIT"
 }

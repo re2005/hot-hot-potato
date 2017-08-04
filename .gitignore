@@ -1,12 +1,3 @@
+/node_modules
 .DS_Store
-node_modules/
-bower_components/
-node_modules/
-coverage/
-.sass-cache/
-.idea/
-*.ipr
-*.iml
-.tmp/
-dist/
-/npm-debug.log
+/.idea
