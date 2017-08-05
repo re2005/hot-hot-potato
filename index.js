@@ -58,11 +58,7 @@ let Game = {
         // Check the loser
         setTimeout(function () {
             Game.stop();
-        }, Game.randomNumber());
-    },
-
-    randomNumber: function () {
-        return Math.floor((Math.random() * 20) + 5);
+        }, 20000);
     },
 
     stop: function () {
