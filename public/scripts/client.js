@@ -1,8 +1,7 @@
 $(document).ready(function () {
 
     var socket;
-    var audio = document.createElement('audio');
-    audio.src = 'http://85.144.18.196/mp3/dnb/Omni_Trio/Even_Angels_Cast_Shadows_2001/08. omni trio - lucid.mp3';
+    var audio = new Audio('rock-and-roll-music.mp3');
 
     var bind = function () {
 
@@ -22,7 +21,7 @@ $(document).ready(function () {
         });
 
         socket.on('start', function () {
-            audio.currentTime = 0;
+            // audio.currentTime = 0;
             audio.play();
             $('#notMe').css('display', 'inline-block');
             $('#gameOver, #youLose').hide();
