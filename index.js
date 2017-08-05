@@ -2,13 +2,10 @@ const express = require('express');
 const http = require('http');
 const app = express();
 const server = http.createServer(app);
-
-let io = require('socket.io').listen(server);
+const io = require('socket.io').listen(server);
 
 app.set('port', (process.env.PORT || 5000));
 app.use(express.static(__dirname + '/public'));
-
-// views is directory for all template files
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 
@@ -20,15 +17,9 @@ app.get('/admin', function (request, response) {
     response.render('pages/admin');
 });
 
-
-
 server.listen(app.get('port'), function () {
     console.log('Node app is running on port', app.get('port'));
 });
-
-let os = require("os");
-let hostname = os.hostname();
-console.log(hostname);
 
 let Game = {
     started: false,
@@ -67,7 +58,11 @@ let Game = {
         // Check the loser
         setTimeout(function () {
             Game.stop();
-        }, 20000);
+        }, Game.randomNumber());
+    },
+
+    randomNumber: function () {
+        return Math.floor((Math.random() * 20) + 5);
     },
 
     stop: function () {
@@ -106,8 +101,7 @@ let Game = {
 
 io.sockets.on('connection', function (socket) {
 
-    let isAdmin = socket.handshake.url.indexOf('admin') > 0;
-    console.log(socket.handshake.url);
+    let isAdmin = socket.handshake.headers.referer.indexOf('admin') > 0;
     if (!isAdmin) Game.addPlayer(socket.id);
 
     socket.on('get-connected-users', function () {

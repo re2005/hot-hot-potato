@@ -21,23 +21,23 @@ $(document).ready(function () {
             $('#players').html(data.length);
         });
 
-        socket.on('start', function (data) {
+        socket.on('start', function () {
             audio.currentTime = 0;
             audio.play();
             $('#notMe').css('display', 'inline-block');
-            $('#showTrack, #gameOver').hide();
+            $('#gameOver, #youLose').hide();
         });
 
-        socket.on('stop', function (data) {
+        socket.on('stop', function () {
             audio.pause();
             $('#notMe').hide();
-            $('#showTrack').show();
+            $('#gameOver').show();
         });
 
         socket.on('change-color', function (data) {
             $('html').css('background-color', data.color);
             if (data.color === 'black') {
-                $('#gameOver').show();
+                $('#youLose').show();
             }
         });
 

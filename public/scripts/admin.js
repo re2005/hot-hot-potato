@@ -7,7 +7,7 @@ $(document).ready(function () {
         socket = io.connect(window.location.origin);
 
         socket.on('connect', function () {
-            $('html').css('background-color', 'gray');
+            $('#connected').html('connected');
             socket.emit('get-connected-users');
         });
 
@@ -31,7 +31,7 @@ $(document).ready(function () {
             console.log('stop');
         });
 
-        $('#start').bind('click mouseout', function () {
+        $('#start').bind('click', function () {
             socket.emit('start');
         });
 
